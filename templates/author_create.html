@@ -4,7 +4,7 @@
 {% block title %}Add New Author - BookHouse{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -19,7 +19,7 @@
             <input type="text" id="full_name" name="full_name" required>
 
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <input class="inps2" type="email" id="email" name="email" required>
 
             <label for="bio">Bio:</label>
             <textarea id="bio" name="bio" rows="5"></textarea>
