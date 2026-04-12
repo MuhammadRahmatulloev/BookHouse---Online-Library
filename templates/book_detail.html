@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ book.title }} - BookHouse{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+    <div class="detail-card">
+        <div class="detail-header">
+            <h1>{{ book.title }}</h1>
+            <div class="detail-actions">
+                <a href="{% url 'book_update' pk=book.pk %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'book_delete' pk=book.pk %}" class="btn btn-danger">Delete</a>
+                <a href="{% url 'book_list' %}" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
+
+        <div class="detail-body">
+            {% if book.cover %}
+                <img src="{{ book.cover.url }}" alt="{{ book.title }}" class="detail-image">
+            {% else %}
+                <div class="detail-image-placeholder">No cover available</div>
+            {% endif %}
+
+            <div class="detail-info">
+                <p><strong>Category:</strong> {{ book.category.name }}</p>
+                <p><strong>Author:</strong> {{ book.author.full_name }}</p>
+                <p><strong>Publisher:</strong> {{ book.publisher.name }}</p>
+                <p><strong>Price:</strong> <span class="price">${{ book.price }}</span></p>
+                <p><strong>Pages:</strong> {{ book.pages }}</p>
+                
+                <h3>Description</h3>
+                <p>{{ book.description|linebreaks }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
