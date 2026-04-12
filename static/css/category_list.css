@@ -1,52 +1,149 @@
+:root {
+    --primary-color: #4f46e5;
+    --accent-color: #ec4899;
+    --text-color: #1e2937;
+    --bg-color: #f8fafc;
+}
+
+.list-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
 .page-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 3rem;
+    align-items: center;
+    margin-bottom: 48px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 20px;
 }
 
 .page-header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
+    font-size: 2.8rem;
+    color: var(--text-color);
+    font-weight: 700;
 }
 
-.item-grid {
+.cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 2.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 32px;
 }
 
-.item-card {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    transition: transform 0.3s, shadow 0.3s;
-    text-decoration: none;
-    color: inherit;
+.card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.item-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow);
+.card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 25px 50px -12px rgb(79 70 229 / 0.25);
 }
 
-.item-image {
+.card-img {
     width: 100%;
-    aspect-ratio: 3/4;
+    height: 240px;
     object-fit: cover;
-    background: #f0f0f0;
 }
 
-.item-info {
-    padding: 1.5rem;
+.card-img-placeholder {
+    width: 100%;
+    height: 240px;
+    background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-style: italic;
+    font-size: 1.1rem;
+}
+
+.card-content {
+    padding: 28px;
+}
+
+.card-content h3 {
+    margin: 0 0 12px 0;
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+.card-content p {
+    color: #64748b;
+    line-height: 1.65;
+    margin-bottom: 16px;
+}
+
+.email {
+    color: #4f46e5;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.book-meta {
+    display: flex;
+    gap: 16px;
+    margin: 16px 0;
+    font-weight: 600;
+}
+
+.price {
+    color: #10b981;
+}
+
+.pages {
+    color: #64748b;
+}
+
+.description {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.card-actions {
+    padding: 0 28px 28px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
     text-align: center;
 }
 
-.item-info h3 {
-    font-family: 'Playfair Display', serif;
-    margin-bottom: 0.5rem;
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
 }
 
-.item-info p {
-    color: var(--text-muted);
-    font-size: 0.85rem;
+.btn-primary:hover {
+    background-color: #4338ca;
+    transform: scale(1.05);
+}
+
+.btn-secondary {
+    background-color: #f1f5f9;
+    color: #1e2937;
+    border: 2px solid #e2e8f0;
+}
+
+.btn-secondary:hover {
+    background-color: #e2e8f0;
+    border-color: #cbd5e1;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #64748b;
+    font-size: 1.2rem;
 }
