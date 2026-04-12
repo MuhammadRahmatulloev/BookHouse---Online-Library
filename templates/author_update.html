@@ -4,7 +4,7 @@
 {% block title %}Edit Author - BookHouse{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+<link rel="stylesheet" href="{% static 'css/author_update.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -14,8 +14,23 @@
         
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
             
+            <label for="full_name">Full Name:</label>
+            <input type="text" id="full_name" name="full_name" value="{{ author.full_name }}" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ author.email }}" required>
+
+            <label for="bio">Bio:</label>
+            <textarea id="bio" name="bio" rows="5">{{ author.bio }}</textarea>
+
+            <label for="photo">New Photo (optional):</label>
+            <input type="file" id="photo" name="photo" accept="image/*">
+            
+            {% if author.photo %}
+            <p>Current photo: <img src="{{ author.photo.url }}" width="150"></p>
+            {% endif %}
+
             <div class="form-buttons">
                 <button type="submit" class="btn btn-primary">Save Changes</button>
                 <a href="{% url 'author_detail' pk=author.pk %}" class="btn btn-secondary">Cancel</a>

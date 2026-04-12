@@ -4,7 +4,7 @@
 {% block title %}Edit Category - BookHouse{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/category_update.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -14,7 +14,12 @@
         
         <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
+            
+            <label for="name">Category Name:</label>
+            <input type="text" id="name" name="name" value="{{ category.name }}" required>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="5">{{ category.description }}</textarea>
             
             <div class="form-buttons">
                 <button type="submit" class="btn btn-primary">Save Changes</button>

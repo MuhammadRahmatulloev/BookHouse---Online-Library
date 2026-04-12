@@ -7,8 +7,8 @@ def home_view(request):
 
 
 def category_list_view(request):
-    category = {'category': Category.objects.all()}
-    return render(request, 'category_list.html', category)
+    categories = Category.objects.all()
+    return render(request, 'category_list.html', {'categories': categories})
 
 
 def category_detail_view(request, pk):
@@ -52,8 +52,8 @@ def category_delete_view(request, pk):
 
 
 def author_list_view(request):
-    author = {'author': Author.objects.all()}
-    return render(request, 'author_list.html', author)
+    authors = Author.objects.all()
+    return render(request, 'author_list.html', {'authors': authors})
 
 
 def author_detail_view(request, pk):
@@ -104,8 +104,8 @@ def author_delete_view(request, pk):
 
 
 def publisher_list_view(request):
-    publisher = {'publisher': Publisher.objects.all()}
-    return render(request, 'publisher_list.html', publisher)
+    publishers = Publisher.objects.all()
+    return render(request, 'publisher_list.html', {'publishers': publishers})
 
 
 def publisher_detail_view(request, pk):
@@ -156,8 +156,8 @@ def publisher_delete_view(request, pk):
 
 
 def book_list_view(request):
-    book = {'book': Book.objects.all()}
-    return render(request, 'book_list.html', book)
+    books = Book.objects.all()
+    return render(request, 'book_list.html', {'books': books})
 
 
 def book_detail_view(request, pk):

@@ -11,7 +11,10 @@
 <body>
 
 <nav class="navbar">
-  <a class="navbar-brand" href="{% url 'home' %}">&#9112; BookHouse</a>
+  <div class="nav-left">
+    <a class="navbar-brand" href="{% url 'home' %}">📚 BookHouse</a>
+  </div>
+
   <ul class="nav-links">
     <li><a href="{% url 'home' %}">Home</a></li>
     <li><a href="{% url 'category_list' %}">Categories</a></li>
@@ -21,7 +24,7 @@
   </ul>
 </nav>
 
-<main class="main-content">
+<main class="main-content fade-in">
   {% block content %}{% endblock %}
 </main>
 

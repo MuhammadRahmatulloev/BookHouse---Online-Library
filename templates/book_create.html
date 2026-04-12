@@ -4,7 +4,7 @@
 {% block title %}Add New Book - BookHouse{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/book_create.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -14,8 +14,46 @@
         
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
             
+            <label for="title">Book Title:</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="category">Category:</label>
+            <select id="category" name="category" required>
+                <option value="">Select Category</option>
+                {% for cat in categories %}
+                <option value="{{ cat.id }}">{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="author">Author:</label>
+            <select id="author" name="author" required>
+                <option value="">Select Author</option>
+                {% for auth in authors %}
+                <option value="{{ auth.id }}">{{ auth.full_name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="publisher">Publisher:</label>
+            <select id="publisher" name="publisher" required>
+                <option value="">Select Publisher</option>
+                {% for pub in publishers %}
+                <option value="{{ pub.id }}">{{ pub.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="price">Price ($):</label>
+            <input type="number" id="price" name="price" step="0.01" required>
+
+            <label for="pages">Pages:</label>
+            <input type="number" id="pages" name="pages" required>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="5"></textarea>
+
+            <label for="cover">Cover Image:</label>
+            <input type="file" id="cover" name="cover" accept="image/*">
+
             <div class="form-buttons">
                 <button type="submit" class="btn btn-primary">Create Book</button>
                 <a href="{% url 'book_list' %}" class="btn btn-secondary">Cancel</a>
