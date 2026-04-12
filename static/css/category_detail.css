@@ -1,0 +1,39 @@
+.detail-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 5rem;
+    align-items: start;
+}
+
+.detail-img-container img {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+}
+
+.detail-content h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.detail-meta {
+    margin-bottom: 2rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.meta-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+}
+
+.meta-label { font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 0.75rem; }
+
+.detail-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
