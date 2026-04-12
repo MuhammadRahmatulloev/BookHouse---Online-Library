@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookHouse{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<nav class="navbar">
+  <a class="navbar-brand" href="{% url 'home' %}">&#9112; BookHouse</a>
+  <ul class="nav-links">
+    <li><a href="{% url 'home' %}">Home</a></li>
+    <li><a href="{% url 'category_list' %}">Categories</a></li>
+    <li><a href="{% url 'author_list' %}">Authors</a></li>
+    <li><a href="{% url 'publisher_list' %}">Publishers</a></li>
+    <li><a href="{% url 'book_list' %}">Books</a></li>
+  </ul>
+</nav>
+
+<main class="main-content">
+  {% block content %}{% endblock %}
+</main>
+
+</body>
+</html>

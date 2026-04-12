@@ -2,6 +2,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Category, Author, Publisher, Book
 
 
+def home_view(request):
+    return render(request, 'home.html')
+
+
 def category_list_view(request):
     category = {'category': Category.objects.all()}
     return render(request, 'category_list.html', category)
@@ -125,7 +129,7 @@ def publisher_update_view(request, pk):
     publisher = get_object_or_404(Publisher, id=pk)
 
     if request.method == 'POST':
-        name = request.POST.get('name ')
+        name = request.POST.get('name')
         address = request.POST.get('address')
         phone = request.POST.get('phone')
         logo = request.FILES.get('logo')
@@ -208,7 +212,7 @@ def book_update_view(request, pk):
     categories = Category.objects.all()
     authors = Author.objects.all()
     publishers = Publisher.objects.all()
-    return render(request, 'book_create.html', {'categories': categories, 'authors': authors, 'publishers': publishers})
+    return render(request, 'book_update.html', {'book': book, 'categories': categories, 'authors': authors, 'publishers': publishers})
 
 
 def book_delete_view(request, pk):

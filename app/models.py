@@ -12,7 +12,7 @@ class Category(models.Model):
 class Author(models.Model):
     full_name = models.CharField(max_length=100)
     email = models.CharField(max_length=130)
-    photo = models.ImageField(upload_to='photo/')
+    photo = models.ImageField(upload_to='photo/', blank=True, null=True)
     bio = models.CharField(max_length=300)
 
     def __str__(self):
@@ -23,7 +23,7 @@ class Publisher(models.Model):
     name = models.CharField(max_length=70)
     address = models.CharField(max_length=135)
     phone = models.CharField(max_length=20)
-    logo = models.ImageField(upload_to='logo/')
+    logo = models.ImageField(upload_to='logo/', blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -36,7 +36,7 @@ class Book(models.Model):
     publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     pages = models.IntegerField()
-    cover = models.ImageField(upload_to='cover/')
+    cover = models.ImageField(upload_to='cover/', blank=True, null=True)
     description = models.CharField(max_length=350)
 
     def __str__(self):
