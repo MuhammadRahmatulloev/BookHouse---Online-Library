@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category.name }} - Category - BookHouse{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+    <div class="detail-card">
+        <div class="detail-header">
+            <h1>{{ category.name }}</h1>
+            <div class="detail-actions">
+                <a href="{% url 'category_update' pk=category.pk %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'category_delete' pk=category.pk %}" class="btn btn-danger">Delete</a>
+                <a href="{% url 'category_list' %}" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
+        
+        <div class="detail-body">
+            <h3>Description</h3>
+            <p>{{ category.description|linebreaks }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

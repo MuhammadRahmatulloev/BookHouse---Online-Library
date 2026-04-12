@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ publisher.name }} - Publisher - BookHouse{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+    <div class="detail-card">
+        <div class="detail-header">
+            <h1>{{ publisher.name }}</h1>
+            <div class="detail-actions">
+                <a href="{% url 'publisher_update' pk=publisher.pk %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'publisher_delete' pk=publisher.pk %}" class="btn btn-danger">Delete</a>
+                <a href="{% url 'publisher_list' %}" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
+
+        <div class="detail-body">
+            {% if publisher.logo %}
+                <img src="{{ publisher.logo.url }}" alt="{{ publisher.name }}" class="detail-image">
+            {% else %}
+                <div class="detail-image-placeholder">No logo available</div>
+            {% endif %}
+
+            <div class="detail-info">
+                <p><strong>Address:</strong> {{ publisher.address }}</p>
+                <p><strong>Phone:</strong> {{ publisher.phone }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
