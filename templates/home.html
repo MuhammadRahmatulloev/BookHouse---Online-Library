@@ -1,47 +1,48 @@
 {% extends 'base.html' %}
-{% load static %}
-{% block title %} — Home{% endblock %}
 
+{% block title %}Home - BookHouse{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="hero">
-  <p class="hero-eyebrow">&#10022; Your Online Library &#10022;</p>
-  <h1>Discover Your Next<br><em>Great Read</em></h1>
-  <p class="hero-sub">Browse thousands of books, explore authors and publishers — all in one beautiful place.</p>
-  <div class="hero-actions">
-    <a href="{% url 'book_list' %}" class="btn btn-primary">Browse Books</a>
-    <a href="{% url 'author_list' %}" class="btn btn-secondary">Explore Authors</a>
-  </div>
-</div>
+<div class="home-container">
+    <div class="hero-section">
+        <h1>Welcome to BookHouse</h1>
+        <p class="lead">Your modern online library for managing books, authors, categories, and publishers with full CRUD operations.</p>
+        <div class="hero-buttons">
+            <a href="{% url 'category_list' %}" class="btn btn-primary">Browse Categories</a>
+            <a href="{% url 'author_list' %}" class="btn btn-primary">Explore Authors</a>
+            <a href="{% url 'publisher_list' %}" class="btn btn-primary">Our Publishers</a>
+            <a href="{% url 'book_list' %}" class="btn btn-primary">All Books</a>
+        </div>
+    </div>
 
-<div class="divider-ornament">&#10022; &#10022; &#10022;</div>
-
-<p class="section-label">Explore the collection</p>
-
-<div class="home-grid">
-  <a href="{% url 'category_list' %}" class="home-card">
-    <div class="home-card-icon">&#128193;</div>
-    <h3>Categories</h3>
-    <p>Browse books organised by genre and subject.</p>
-    <span class="home-card-arrow">&#8594;</span>
-  </a>
-  <a href="{% url 'author_list' %}" class="home-card">
-    <div class="home-card-icon">&#9999;</div>
-    <h3>Authors</h3>
-    <p>Discover writers and their complete works.</p>
-    <span class="home-card-arrow">&#8594;</span>
-  </a>
-  <a href="{% url 'publisher_list' %}" class="home-card">
-    <div class="home-card-icon">&#127970;</div>
-    <h3>Publishers</h3>
-    <p>Learn about the houses behind the books.</p>
-    <span class="home-card-arrow">&#8594;</span>
-  </a>
-  <a href="{% url 'book_list' %}" class="home-card">
-    <div class="home-card-icon">&#128216;</div>
-    <h3>Books</h3>
-    <p>The full catalogue — search, add, and manage.</p>
-    <span class="home-card-arrow">&#8594;</span>
-  </a>
+    <div class="features-section">
+        <h2>Powerful Library Management</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>Categories</h3>
+                <p>Organize books by topics and genres easily.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✍️</div>
+                <h3>Authors</h3>
+                <p>Manage writer profiles with photos and bios.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏢</div>
+                <h3>Publishers</h3>
+                <p>Keep track of publishing houses and contacts.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📖</div>
+                <h3>Books</h3>
+                <p>Full book catalog with covers, prices, and details.</p>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Authors - BookHouse{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/author_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="list-container">
+    <div class="page-header">
+        <h1>Authors</h1>
+        <a href="{% url 'author_create' %}" class="btn btn-primary">Add New Author</a>
+    </div>
+
+    <div class="cards-grid">
+        {% for author in authors %}
+        <div class="card">
+            {% if author.photo %}
+                <img src="{{ author.photo.url }}" alt="{{ author.full_name }}" class="card-img">
+            {% else %}
+                <div class="card-img-placeholder">No photo</div>
+            {% endif %}
+            
+            <div class="card-content">
+                <h3>{{ author.full_name }}</h3>
+                <p class="email">{{ author.email }}</p>
+                <p>{{ author.bio|truncatewords:25 }}</p>
+            </div>
+            
+            <div class="card-actions">
+                <a href="{% url 'author_detail' pk=author.pk %}" class="btn btn-secondary">View Details</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <p>No authors yet. Add the first one!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
