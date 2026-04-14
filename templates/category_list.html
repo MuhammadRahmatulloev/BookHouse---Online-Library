@@ -4,31 +4,37 @@
 {% block title %}Categories - BookHouse{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/category_list.css' %}">
+    <link rel="stylesheet" href="{% static 'css/list_styles.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="list-container">
     <div class="page-header">
         <h1>Categories</h1>
-        <a href="{% url 'category_create' %}" class="btn btn-primary">Add New Category</a>
+        <a href="{% url 'category_create' %}" class="btn btn-primary">+ Add New Category</a>
     </div>
+
+    <!-- Форма поиска -->
+    <form method="get" class="search-form">
+        <input type="text" name="q" placeholder="Search by name..." value="{{ request.GET.q }}">
+        <input type="text" name="desc" placeholder="Search in description..." value="{{ request.GET.desc }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a href="{% url 'category_list' %}" class="btn btn-secondary">Reset</a>
+    </form>
 
     <div class="cards-grid">
         {% for category in categories %}
         <div class="card">
             <div class="card-content">
                 <h3>{{ category.name }}</h3>
-                <p>{{ category.description|truncatewords:30 }}</p>
+                <p>{{ category.description|truncatewords:20 }}</p>
             </div>
             <div class="card-actions">
                 <a href="{% url 'category_detail' pk=category.pk %}" class="btn btn-secondary">View Details</a>
             </div>
         </div>
         {% empty %}
-        <div class="empty-state">
-            <p>No categories yet. Create the first one!</p>
-        </div>
+        <div class="empty-state">No categories found 😢</div>
         {% endfor %}
     </div>
 </div>

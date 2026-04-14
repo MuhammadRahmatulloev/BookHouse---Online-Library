@@ -1,75 +1,174 @@
-.delete-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 40px;
-  width: 100%;
+/* Общий контейнер – центрирование */
+.list-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-.delete-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--rl);
-  padding: 52px 48px;
-  max-width: 500px;
-  width: 100%;
-  text-align: center;
-  box-shadow: var(--shadow);
+/* Заголовок и кнопка добавления */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
 }
 
-.delete-icon {
-  font-size: 54px;
-  line-height: 1;
-  margin-bottom: 22px;
-  display: block;
-  /* red tint ring */
-  width: 90px;
-  height: 90px;
-  background: #FDF0F2;
-  border: 2px solid #F0C0C8;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 24px;
+/* Формы поиска и фильтров */
+.search-form, .filter-form {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-end;
 }
 
-.delete-card h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--ink);
-  margin-bottom: 14px;
+.filter-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
-.warning-text {
-  font-size: 16px;
-  color: var(--ink-2);
-  line-height: 1.65;
-  margin-bottom: 10px;
-}
-.warning-text strong { color: var(--burgundy); }
-
-.info-text {
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.6;
-  margin-bottom: 36px;
-  padding: 12px 16px;
-  background: var(--cream-2);
-  border-radius: var(--r);
+.filter-row label {
+    font-weight: 600;
 }
 
-.delete-buttons {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
+input, button, .btn {
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    background: white;
 }
-.delete-buttons .btn { padding: 11px 28px; }
 
-@media (max-width: 480px) {
-  .delete-card { padding: 36px 22px; }
-  .delete-buttons { flex-direction: column; }
-  .delete-buttons .btn { width: 100%; justify-content: center; }
+button, .btn {
+    cursor: pointer;
+    transition: 0.2s;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+}
+
+.btn-primary {
+    background: #6366f1;
+    color: white;
+}
+.btn-primary:hover {
+    background: #4f46e5;
+}
+.btn-secondary {
+    background: #e5e7eb;
+    color: #1f2937;
+}
+.btn-secondary:hover {
+    background: #d1d5db;
+}
+
+/* Сетка карточек */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+/* Карточка */
+.card {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+}
+
+/* Обёртка изображения – фиксированный размер */
+.card-img-wrapper {
+    width: 100%;
+    height: 220px;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.no-img {
+    font-size: 48px;
+    color: #9ca3af;
+    text-align: center;
+}
+
+/* Контент карточки */
+.card-content {
+    padding: 20px 20px 16px;
+    flex: 1;
+}
+.card-content h3 {
+    font-size: 1.35rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+.card-content p {
+    color: #4b5563;
+    margin: 6px 0;
+    line-height: 1.4;
+}
+.book-meta {
+    display: flex;
+    gap: 16px;
+    margin: 12px 0;
+    font-weight: 600;
+}
+.price {
+    color: #10b981;
+}
+.pages {
+    color: #6b7280;
+}
+
+/* Кнопки действий внизу карточки */
+.card-actions {
+    padding: 16px 20px 20px;
+    border-top: 1px solid #edf2f7;
+    text-align: center;
+}
+.card-actions .btn {
+    width: 100%;
+    text-align: center;
+}
+
+/* Пустое состояние */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #6b7280;
+    padding: 60px;
+}
+
+/* Адаптивность */
+@media (max-width: 700px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+    .search-form, .filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-row {
+        justify-content: space-between;
+    }
 }
