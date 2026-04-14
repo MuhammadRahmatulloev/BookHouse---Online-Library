@@ -4,25 +4,43 @@
 {% block title %}Books - BookHouse{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/book_list.css' %}">
+    <link rel="stylesheet" href="{% static 'css/list_styles.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="list-container">
     <div class="page-header">
         <h1>Books</h1>
-        <a href="{% url 'book_create' %}" class="btn btn-primary">Add New Book</a>
+        <a href="{% url 'book_create' %}" class="btn btn-primary">+ Add New Book</a>
     </div>
+
+    <!-- Упрощённая форма: поиск по названию + мин/макс цена -->
+    <form method="get" class="filter-form">
+        <div class="filter-row">
+            <input type="text" name="search" placeholder="Search by title..." value="{{ request.GET.search }}">
+        </div>
+        <div class="filter-row">
+            <label>Price:</label>
+            <input type="number" name="min_price" placeholder="Min $" value="{{ request.GET.min_price }}" step="0.01">
+            <span>–</span>
+            <input type="number" name="max_price" placeholder="Max $" value="{{ request.GET.max_price }}" step="0.01">
+        </div>
+        <div class="filter-row">
+            <button type="submit" class="btn btn-primary">Apply filters</button>
+            <a href="{% url 'book_list' %}" class="btn btn-secondary">Reset</a>
+        </div>
+    </form>
 
     <div class="cards-grid">
         {% for book in books %}
         <div class="card">
-            {% if book.cover %}
-                <img src="{{ book.cover.url }}" alt="{{ book.title }}" class="card-img">
-            {% else %}
-                <div class="card-img-placeholder">No cover</div>
-            {% endif %}
-            
+            <div class="card-img-wrapper">
+                {% if book.cover %}
+                    <img src="{{ book.cover.url }}" alt="{{ book.title }}">
+                {% else %}
+                    <div class="no-img">📖 No cover</div>
+                {% endif %}
+            </div>
             <div class="card-content">
                 <h3>{{ book.title }}</h3>
                 <p><strong>Author:</strong> {{ book.author.full_name }}</p>
@@ -32,17 +50,14 @@
                     <span class="price">${{ book.price }}</span>
                     <span class="pages">{{ book.pages }} pages</span>
                 </div>
-                <p class="description">{{ book.description|truncatewords:20 }}</p>
+                <p>{{ book.description|truncatewords:15 }}</p>
             </div>
-            
             <div class="card-actions">
                 <a href="{% url 'book_detail' pk=book.pk %}" class="btn btn-secondary">View Details</a>
             </div>
         </div>
         {% empty %}
-        <div class="empty-state">
-            <p>No books yet. Add the first one!</p>
-        </div>
+        <div class="empty-state">No books match your criteria 😢</div>
         {% endfor %}
     </div>
 </div>

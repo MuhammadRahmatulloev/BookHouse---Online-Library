@@ -2,13 +2,22 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Category, Author, Publisher, Book
 
 
-def home_view(request):
-    return render(request, 'home.html')
-
-
 def category_list_view(request):
     categories = Category.objects.all()
+
+    # Поиск по имени и описанию
+    q = request.GET.get('q')
+    desc = request.GET.get('desc')
+    if q:
+        categories = categories.filter(name__icontains=q)
+    if desc:
+        categories = categories.filter(description__icontains=desc)
+
     return render(request, 'category_list.html', {'categories': categories})
+
+
+def home_view(request):
+    return render(request, 'home.html')
 
 
 def category_detail_view(request, pk):
@@ -53,6 +62,15 @@ def category_delete_view(request, pk):
 
 def author_list_view(request):
     authors = Author.objects.all()
+
+    search = request.GET.get('search')
+    if search:
+        authors = authors.filter(
+            full_name__icontains=search
+        ) | authors.filter(
+            email__icontains=search
+        )
+
     return render(request, 'author_list.html', {'authors': authors})
 
 
@@ -105,6 +123,15 @@ def author_delete_view(request, pk):
 
 def publisher_list_view(request):
     publishers = Publisher.objects.all()
+
+    search = request.GET.get('search')
+    if search:
+        publishers = publishers.filter(
+            name__icontains=search
+        ) | publishers.filter(
+            address__icontains=search
+        )
+
     return render(request, 'publisher_list.html', {'publishers': publishers})
 
 
@@ -157,7 +184,37 @@ def publisher_delete_view(request, pk):
 
 def book_list_view(request):
     books = Book.objects.all()
-    return render(request, 'book_list.html', {'books': books})
+
+    search = request.GET.get('search')
+    if search:
+        books = books.filter(
+            title__icontains=search
+        ) | books.filter(
+            author__full_name__icontains=search
+        )
+
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    min_pages = request.GET.get('min_pages')
+    max_pages = request.GET.get('max_pages')
+
+    if min_price:
+        books = books.filter(price__gte=min_price)
+    if max_price:
+        books = books.filter(price__lte=max_price)
+    if min_pages:
+        books = books.filter(pages__gte=min_pages)
+    if max_pages:
+        books = books.filter(pages__lte=max_pages)
+
+    return render(request, 'book_list.html', {
+        'books': books,
+        'search': search,
+        'min_price': min_price,
+        'max_price': max_price,
+        'min_pages': min_pages,
+        'max_pages': max_pages,
+    })
 
 
 def book_detail_view(request, pk):

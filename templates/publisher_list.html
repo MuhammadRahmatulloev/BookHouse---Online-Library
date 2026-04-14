@@ -4,39 +4,43 @@
 {% block title %}Publishers - BookHouse{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/publisher_list.css' %}">
+    <link rel="stylesheet" href="{% static 'css/list_styles.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="list-container">
     <div class="page-header">
         <h1>Publishers</h1>
-        <a href="{% url 'publisher_create' %}" class="btn btn-primary">Add New Publisher</a>
+        <a href="{% url 'publisher_create' %}" class="btn btn-primary">+ Add New Publisher</a>
     </div>
+
+    <form method="get" class="search-form">
+        <input type="text" name="search" placeholder="Search by name or address..." value="{{ request.GET.search }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a href="{% url 'publisher_list' %}" class="btn btn-secondary">Reset</a>
+    </form>
 
     <div class="cards-grid">
         {% for publisher in publishers %}
         <div class="card">
-            {% if publisher.logo %}
-                <img src="{{ publisher.logo.url }}" alt="{{ publisher.name }}" class="card-img">
-            {% else %}
-                <div class="card-img-placeholder">No logo</div>
-            {% endif %}
-            
+            <div class="card-img-wrapper">
+                {% if publisher.logo %}
+                    <img src="{{ publisher.logo.url }}" alt="{{ publisher.name }}">
+                {% else %}
+                    <div class="no-img">🏢 No logo</div>
+                {% endif %}
+            </div>
             <div class="card-content">
                 <h3>{{ publisher.name }}</h3>
                 <p><strong>Address:</strong> {{ publisher.address }}</p>
                 <p><strong>Phone:</strong> {{ publisher.phone }}</p>
             </div>
-            
             <div class="card-actions">
                 <a href="{% url 'publisher_detail' pk=publisher.pk %}" class="btn btn-secondary">View Details</a>
             </div>
         </div>
         {% empty %}
-        <div class="empty-state">
-            <p>No publishers yet. Add the first one!</p>
-        </div>
+        <div class="empty-state">No publishers found 😢</div>
         {% endfor %}
     </div>
 </div>
