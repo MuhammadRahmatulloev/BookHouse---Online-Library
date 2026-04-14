@@ -55,10 +55,10 @@ button, .btn {
 
 .btn-primary {
     background: #dfcd56;
-    color: rgb(50, 49, 49);
+    color: #1f2937;
 }
 .btn-primary:hover {
-    background: #ad9e3d;
+    background: #d2bb27;
 }
 .btn-secondary {
     background: #e5e7eb;

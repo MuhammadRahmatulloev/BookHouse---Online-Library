@@ -14,16 +14,15 @@
         <a href="{% url 'book_create' %}" class="btn btn-primary">+ Add New Book</a>
     </div>
 
-    <!-- Упрощённая форма: поиск по названию + мин/макс цена -->
     <form method="get" class="filter-form">
         <div class="filter-row">
-            <input type="text" name="search" placeholder="Search by title..." value="{{ request.GET.search }}">
+            <input type="text" name="search" placeholder="Search by title..." value="{{ search }}">
         </div>
         <div class="filter-row">
             <label>Price:</label>
-            <input type="number" name="min_price" placeholder="Min $" value="{{ request.GET.min_price }}" step="0.01">
+            <input type="number" name="min_price" placeholder="Min $" value="{{ min_price }}" step="0.01">
             <span>–</span>
-            <input type="number" name="max_price" placeholder="Max $" value="{{ request.GET.max_price }}" step="0.01">
+            <input type="number" name="max_price" placeholder="Max $" value="{{ max_price }}" step="0.01">
         </div>
         <div class="filter-row">
             <button type="submit" class="btn btn-primary">Apply filters</button>
@@ -38,7 +37,7 @@
                 {% if book.cover %}
                     <img src="{{ book.cover.url }}" alt="{{ book.title }}">
                 {% else %}
-                    <div class="no-img">📖 No cover</div>
+                    <div class="no-img">No cover!</div>
                 {% endif %}
             </div>
             <div class="card-content">
@@ -57,7 +56,7 @@
             </div>
         </div>
         {% empty %}
-        <div class="empty-state">No books match your criteria 😢</div>
+        <div class="empty-state">No books match your criteria!</div>
         {% endfor %}
     </div>
 </div>
