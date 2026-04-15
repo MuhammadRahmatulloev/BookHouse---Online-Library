@@ -1,0 +1,108 @@
+/* Title */
+.stats-title {
+    margin-bottom: 30px;
+}
+
+/* Cards */
+.stats-card {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow);
+}
+
+/* Subtitle */
+.stats-subtitle {
+    margin-bottom: 20px;
+    font-family: 'Playfair Display', serif;
+}
+
+/* Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+/* Stat Box */
+.stats-box {
+    text-align: center;
+    padding: 20px;
+    background: var(--cream);
+    border-radius: 12px;
+    transition: 0.3s ease;
+}
+
+.stats-box:hover {
+    transform: translateY(-5px);
+}
+
+/* Numbers */
+.stats-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+/* Labels */
+.stats-label {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+/* Table */
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+/* Table Head */
+.stats-table thead tr {
+    border-bottom: 2px solid var(--border);
+}
+
+.stats-table th {
+    text-align: left;
+    padding: 12px 16px;
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Table Body */
+.stats-table tbody tr {
+    border-bottom: 1px solid var(--cream-2);
+}
+
+/* Cells */
+.stats-table td {
+    padding: 14px 16px;
+}
+
+/* Author link */
+.author-name a {
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.author-name a:hover {
+    text-decoration: underline;
+}
+
+/* Centered + gold */
+.gold-text {
+    text-align: center;
+    color: var(--gold);
+    font-weight: 700;
+}
+
+/* Muted text */
+.muted-text {
+    text-align: center;
+    color: var(--ink-2);
+}

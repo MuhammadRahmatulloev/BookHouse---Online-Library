@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Statistics - BookHouse{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/stats.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="list-container">
+
+    <h1 class="stats-title">📊 Library Statistics</h1>
+
+    <div class="stats-card">
+        <h2 class="stats-subtitle">Book Statistics</h2>
+
+        <div class="stats-grid">
+            <div class="stats-box">
+                <div class="stats-number">{{ stats.total_books }}</div>
+                <div class="stats-label">Total Books</div>
+            </div>
+
+            <div class="stats-box">
+                <div class="stats-number">${{ stats.average_price|floatformat:2 }}</div>
+                <div class="stats-label">Average Price</div>
+            </div>
+
+            <div class="stats-box">
+                <div class="stats-number">${{ stats.max_price }}</div>
+                <div class="stats-label">Most Expensive</div>
+            </div>
+
+            <div class="stats-box">
+                <div class="stats-number">${{ stats.min_price }}</div>
+                <div class="stats-label">Cheapest</div>
+            </div>
+
+            <div class="stats-box">
+                <div class="stats-number">${{ stats.total_price|floatformat:2 }}</div>
+                <div class="stats-label">Total Value</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-card">
+        <h2 class="stats-subtitle">Authors Breakdown</h2>
+
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>Author</th>
+                    <th>Books</th>
+                    <th>Avg Price</th>
+                    <th>Max Price</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for author in authors %}
+                <tr>
+                    <td class="author-name">
+                        <a href="{% url 'author_detail' pk=author.pk %}">
+                            {{ author.full_name }}
+                        </a>
+                    </td>
+
+                    <td class="gold-text">
+                        {{ author.num_books }}
+                    </td>
+
+                    <td class="muted-text">
+                        {% if author.avg_book_price %}
+                            ${{ author.avg_book_price|floatformat:2 }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+
+                    <td class="muted-text">
+                        {% if author.max_book_price %}
+                            ${{ author.max_book_price|floatformat:2 }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

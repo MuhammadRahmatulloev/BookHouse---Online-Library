@@ -1,5 +1,32 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Category, Author, Publisher, Book
+from .filter import BookFilter  
+from django.db import models as db_models
+
+
+# def search_django(request):
+#     query = request.GET.get('q', '')
+#     products = {'products': Product.objects.filter(name__icontains=query), 'query': query}
+#     return render()
+
+
+def stats_view(request):
+    book_stats = Book.objects.aggregate(
+        total_books=db_models.Count('id'),
+        total_price=db_models.Sum('price'),
+        average_price=db_models.Avg('price'),
+        max_price=db_models.Max('price'),
+        min_price=db_models.Min('price'),
+    )
+    authors = Author.objects.annotate(
+        num_books=db_models.Count('book'),
+        avg_book_price=db_models.Avg('book__price'),
+        max_book_price=db_models.Max('book__price'),
+    )
+    return render(request, 'stats.html', {
+        'stats': book_stats,
+        'authors': authors,
+    })
 
 
 def category_list_view(request):
@@ -59,8 +86,18 @@ def category_delete_view(request, pk):
     return render(request, 'category_delete.html', {'category': category})
 
 
+# def author_list_view(request):
+#     authors = Author.objects.all()
+
+#     search = request.GET.get('search')
+#     if search:
+#         authors = authors.filter(full_name__icontains=search) | authors.filter(email__icontains=search)
+
+#     return render(request, 'author_list.html', {'authors': authors})
+
+
 def author_list_view(request):
-    authors = Author.objects.all()
+    authors = Author.objects.prefetch_related('book_set')  # или 'books' если добавил related_name
 
     search = request.GET.get('search')
     if search:
@@ -173,31 +210,58 @@ def publisher_delete_view(request, pk):
     return render(request, 'publisher_delete.html', {'publisher': publisher})
 
 
+# def book_list_view(request):
+#     books = Book.objects.all()
+
+#     search = request.GET.get('search')
+#     if search:
+#         books = books.filter(title__icontains=search)
+
+#     min_price = request.GET.get('min_price')
+#     max_price = request.GET.get('max_price')
+
+#     if min_price:
+#         books = books.filter(price__gt=min_price)
+#     if max_price:
+#         books = books.filter(price__lt=max_price)
+
+#     return render(request, 'book_list.html', {
+#         'books': books,
+#         'search': search,
+#         'min_price': min_price,
+#         'max_price': max_price
+#     })
+
+
+# def book_list_view(request):
+#     book_filter = BookFilter(request.GET, queryset=Book.objects.all())
+#     return render(request, 'book_list.html', {
+#         'books': book_filter.qs,
+#         'filter': book_filter,
+#     })
+
+
 def book_list_view(request):
-    books = Book.objects.all()
+    book_filter = BookFilter(request.GET, queryset=Book.objects.all())
 
-    search = request.GET.get('search')
-    if search:
-        books = books.filter(title__icontains=search)
-
-    min_price = request.GET.get('min_price')
-    max_price = request.GET.get('max_price')
-
-    if min_price:
-        books = books.filter(price__gt=min_price)
-    if max_price:
-        books = books.filter(price__lt=max_price)
-
+def book_list_view(request):
+    book_filter = BookFilter(
+        request.GET,
+        queryset=Book.objects.select_related('author', 'category', 'publisher')
+    )
     return render(request, 'book_list.html', {
-        'books': books,
-        'search': search,
-        'min_price': min_price,
-        'max_price': max_price
+        'books': book_filter.qs,
+        'filter': book_filter,
     })
 
 
+# def book_detail_view(request, pk):
+#     book = get_object_or_404(Book, id=pk)
+#     return render(request, 'book_detail.html', {'book': book})
+
+
 def book_detail_view(request, pk):
-    book = get_object_or_404(Book, id=pk)
+    book = get_object_or_404(Book.objects.select_related('author', 'category', 'publisher'), id=pk)
     return render(request, 'book_detail.html', {'book': book})
 
 
