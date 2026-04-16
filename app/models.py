@@ -38,6 +38,15 @@ class Book(models.Model):
     pages = models.IntegerField()
     cover = models.ImageField(upload_to='cover/', blank=True, null=True)
     description = models.CharField(max_length=350)
-
+    
     def __str__(self):
         return self.title
+    
+
+class UserModel(models.Model):
+    username = models.CharField(max_length=40, unique=True, null=False)
+    phone = models.CharField(max_length=13, unique=True, null=False)
+    password = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.username

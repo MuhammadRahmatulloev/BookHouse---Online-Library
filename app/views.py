@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, Author, Publisher, Book
+from .models import Category, Author, Publisher, Book, UserModel
 from .filter import BookFilter  
-from django.db import models as db_models
+from django.db import models
 
 
 # def search_django(request):
@@ -10,26 +10,32 @@ from django.db import models as db_models
 #     return render()
 
 
+def get_current_user(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return None
+    return UserModel.objects.filter(id=user_id).first()
+
+
 def stats_view(request):
     book_stats = Book.objects.aggregate(
-        total_books=db_models.Count('id'),
-        total_price=db_models.Sum('price'),
-        average_price=db_models.Avg('price'),
-        max_price=db_models.Max('price'),
-        min_price=db_models.Min('price'),
-    )
+        total_books=models.Count('id'),
+        total_price=models.Sum('price'),
+        average_price=models.Avg('price'),
+        max_price=models.Max('price'),
+        min_price=models.Min('price'),)
+    
     authors = Author.objects.annotate(
-        num_books=db_models.Count('book'),
-        avg_book_price=db_models.Avg('book__price'),
-        max_book_price=db_models.Max('book__price'),
-    )
-    return render(request, 'stats.html', {
-        'stats': book_stats,
-        'authors': authors,
-    })
+        num_books=models.Count('book'),
+        avg_book_price=models.Avg('book__price'),
+        max_book_price=models.Max('book__price'),)
+    return render(request, 'stats.html', {'stats': book_stats, 'authors': authors,})
 
 
 def category_list_view(request):
+    if not get_current_user(request):
+        return redirect('login')
+    
     categories = Category.objects.all()
 
     q = request.GET.get('q')
@@ -40,10 +46,6 @@ def category_list_view(request):
         categories = categories.filter(description__icontains=desc)
 
     return render(request, 'category_list.html', {'categories': categories})
-
-
-def home_view(request):
-    return render(request, 'home.html')
 
 
 def category_detail_view(request, pk):
@@ -97,7 +99,10 @@ def category_delete_view(request, pk):
 
 
 def author_list_view(request):
-    authors = Author.objects.prefetch_related('book_set')  # или 'books' если добавил related_name
+    if not get_current_user(request):
+        return redirect('login')
+    
+    authors = Author.objects.prefetch_related('book_set')
 
     search = request.GET.get('search')
     if search:
@@ -154,6 +159,9 @@ def author_delete_view(request, pk):
 
 
 def publisher_list_view(request):
+    if not get_current_user(request):
+        return redirect('login')
+    
     publishers = Publisher.objects.all()
 
     search = request.GET.get('search')
@@ -242,9 +250,9 @@ def publisher_delete_view(request, pk):
 
 
 def book_list_view(request):
-    book_filter = BookFilter(request.GET, queryset=Book.objects.all())
-
-def book_list_view(request):
+    if not get_current_user(request):
+        return redirect('login')
+    
     book_filter = BookFilter(
         request.GET,
         queryset=Book.objects.select_related('author', 'category', 'publisher')
@@ -323,3 +331,87 @@ def book_delete_view(request, pk):
         return redirect('book_list')
     
     return render(request, 'book_delete.html', {'book': book})
+
+
+def register_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        phone = request.POST.get('phone')
+        password = request.POST.get('password')
+
+        if username and phone and password:
+            UserModel.objects.create(
+                username=username,
+                phone=phone,
+                password=password
+            )
+            return redirect('login')
+        
+    return render(request, 'register.html')
+
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        get_user = UserModel.objects.filter(username=username, password=password).first()
+        
+        if get_user:
+            request.session['user_id'] = get_user.id
+            return redirect('home')
+        
+        return render(request, 'login.html', {'error': 'Invalid username or password'})
+    
+    return render(request, 'login.html')
+    
+
+def forgot_password_view(request):
+    if request.method == 'POST':
+        phone = request.POST.get('phone')
+        new_pass = request.POST.get('new_pass')
+
+        get_user = UserModel.objects.filter(phone=phone).first()
+
+        if get_user:
+            get_user.password = new_pass
+            get_user.save()
+            return redirect('login')
+        
+        return render(request, 'forgot_password.html', {'error': 'No account found with this phone'})
+
+    return render(request, 'forgot_password.html')
+
+
+def change_password_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        new_password = request.POST.get('new_password')
+
+        get_user = UserModel.objects.filter(
+            username=username,
+            password=password).first()
+        
+        if get_user:
+            get_user.password = new_password
+            get_user.save()
+            return redirect('home')
+        
+    return render(request, 'change_password.html')
+
+
+def logout_view(request):
+    request.session.flush()
+    return redirect('login')
+
+
+def home_view(request):
+    get_user = request.session.get('user_id')
+    
+    if not get_user:
+        return redirect('login')
+    data = {'data': get_object_or_404(UserModel, id=get_user)}
+    return render(request, 'home.html', data)
+
+
