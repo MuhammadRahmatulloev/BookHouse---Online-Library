@@ -14,10 +14,9 @@
         <a href="{% url 'category_create' %}" class="btn btn-primary">+ Add New Category</a>
     </div>
 
-    <!-- Форма поиска -->
     <form method="get" class="search-form">
-        <input type="text" name="q" placeholder="Search by name..." value="{{ request.GET.q }}">
-        <input type="text" name="desc" placeholder="Search in description..." value="{{ request.GET.desc }}">
+        <input type="text" name="q" placeholder="Search by name..." value="{{ q }}">
+        <input type="text" name="desc" placeholder="Search in description..." value="{{ desc }}">
         <button type="submit" class="btn btn-primary">Search</button>
         <a href="{% url 'category_list' %}" class="btn btn-secondary">Reset</a>
     </form>
@@ -34,7 +33,7 @@
             </div>
         </div>
         {% empty %}
-        <div class="empty-state">No categories found 😢</div>
+        <div class="empty-state">No categories found!</div>
         {% endfor %}
     </div>
 </div>

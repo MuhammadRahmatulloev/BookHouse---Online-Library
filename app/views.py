@@ -1,11 +1,43 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, Author, Publisher, Book
+from .models import Category, Author, Publisher, Book, UserModel
+from .filter import BookFilter  
+from django.db import models
+
+
+# def search_django(request):
+#     query = request.GET.get('q', '')
+#     products = {'products': Product.objects.filter(name__icontains=query), 'query': query}
+#     return render()
+
+
+def get_current_user(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return None
+    return UserModel.objects.filter(id=user_id).first()
+
+
+def stats_view(request):
+    book_stats = Book.objects.aggregate(
+        total_books=models.Count('id'),
+        total_price=models.Sum('price'),
+        average_price=models.Avg('price'),
+        max_price=models.Max('price'),
+        min_price=models.Min('price'),)
+    
+    authors = Author.objects.annotate(
+        num_books=models.Count('book'),
+        avg_book_price=models.Avg('book__price'),
+        max_book_price=models.Max('book__price'),)
+    return render(request, 'stats.html', {'stats': book_stats, 'authors': authors,})
 
 
 def category_list_view(request):
+    if not get_current_user(request):
+        return redirect('login')
+    
     categories = Category.objects.all()
 
-    # Поиск по имени и описанию
     q = request.GET.get('q')
     desc = request.GET.get('desc')
     if q:
@@ -14,10 +46,6 @@ def category_list_view(request):
         categories = categories.filter(description__icontains=desc)
 
     return render(request, 'category_list.html', {'categories': categories})
-
-
-def home_view(request):
-    return render(request, 'home.html')
 
 
 def category_detail_view(request, pk):
@@ -60,16 +88,25 @@ def category_delete_view(request, pk):
     return render(request, 'category_delete.html', {'category': category})
 
 
+# def author_list_view(request):
+#     authors = Author.objects.all()
+
+#     search = request.GET.get('search')
+#     if search:
+#         authors = authors.filter(full_name__icontains=search) | authors.filter(email__icontains=search)
+
+#     return render(request, 'author_list.html', {'authors': authors})
+
+
 def author_list_view(request):
-    authors = Author.objects.all()
+    if not get_current_user(request):
+        return redirect('login')
+    
+    authors = Author.objects.prefetch_related('book_set')
 
     search = request.GET.get('search')
     if search:
-        authors = authors.filter(
-            full_name__icontains=search
-        ) | authors.filter(
-            email__icontains=search
-        )
+        authors = authors.filter(full_name__icontains=search) | authors.filter(email__icontains=search)
 
     return render(request, 'author_list.html', {'authors': authors})
 
@@ -122,15 +159,14 @@ def author_delete_view(request, pk):
 
 
 def publisher_list_view(request):
+    if not get_current_user(request):
+        return redirect('login')
+    
     publishers = Publisher.objects.all()
 
     search = request.GET.get('search')
     if search:
-        publishers = publishers.filter(
-            name__icontains=search
-        ) | publishers.filter(
-            address__icontains=search
-        )
+        publishers = publishers.filter(name__icontains=search) | publishers.filter(address__icontains=search)
 
     return render(request, 'publisher_list.html', {'publishers': publishers})
 
@@ -182,43 +218,58 @@ def publisher_delete_view(request, pk):
     return render(request, 'publisher_delete.html', {'publisher': publisher})
 
 
+# def book_list_view(request):
+#     books = Book.objects.all()
+
+#     search = request.GET.get('search')
+#     if search:
+#         books = books.filter(title__icontains=search)
+
+#     min_price = request.GET.get('min_price')
+#     max_price = request.GET.get('max_price')
+
+#     if min_price:
+#         books = books.filter(price__gt=min_price)
+#     if max_price:
+#         books = books.filter(price__lt=max_price)
+
+#     return render(request, 'book_list.html', {
+#         'books': books,
+#         'search': search,
+#         'min_price': min_price,
+#         'max_price': max_price
+#     })
+
+
+# def book_list_view(request):
+#     book_filter = BookFilter(request.GET, queryset=Book.objects.all())
+#     return render(request, 'book_list.html', {
+#         'books': book_filter.qs,
+#         'filter': book_filter,
+#     })
+
+
 def book_list_view(request):
-    books = Book.objects.all()
-
-    search = request.GET.get('search')
-    if search:
-        books = books.filter(
-            title__icontains=search
-        ) | books.filter(
-            author__full_name__icontains=search
-        )
-
-    min_price = request.GET.get('min_price')
-    max_price = request.GET.get('max_price')
-    min_pages = request.GET.get('min_pages')
-    max_pages = request.GET.get('max_pages')
-
-    if min_price:
-        books = books.filter(price__gte=min_price)
-    if max_price:
-        books = books.filter(price__lte=max_price)
-    if min_pages:
-        books = books.filter(pages__gte=min_pages)
-    if max_pages:
-        books = books.filter(pages__lte=max_pages)
-
+    if not get_current_user(request):
+        return redirect('login')
+    
+    book_filter = BookFilter(
+        request.GET,
+        queryset=Book.objects.select_related('author', 'category', 'publisher')
+    )
     return render(request, 'book_list.html', {
-        'books': books,
-        'search': search,
-        'min_price': min_price,
-        'max_price': max_price,
-        'min_pages': min_pages,
-        'max_pages': max_pages,
+        'books': book_filter.qs,
+        'filter': book_filter,
     })
 
 
+# def book_detail_view(request, pk):
+#     book = get_object_or_404(Book, id=pk)
+#     return render(request, 'book_detail.html', {'book': book})
+
+
 def book_detail_view(request, pk):
-    book = get_object_or_404(Book, id=pk)
+    book = get_object_or_404(Book.objects.select_related('author', 'category', 'publisher'), id=pk)
     return render(request, 'book_detail.html', {'book': book})
 
 
@@ -280,3 +331,87 @@ def book_delete_view(request, pk):
         return redirect('book_list')
     
     return render(request, 'book_delete.html', {'book': book})
+
+
+def register_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        phone = request.POST.get('phone')
+        password = request.POST.get('password')
+
+        if username and phone and password:
+            UserModel.objects.create(
+                username=username,
+                phone=phone,
+                password=password
+            )
+            return redirect('login')
+        
+    return render(request, 'register.html')
+
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        get_user = UserModel.objects.filter(username=username, password=password).first()
+        
+        if get_user:
+            request.session['user_id'] = get_user.id
+            return redirect('home')
+        
+        return render(request, 'login.html', {'error': 'Invalid username or password'})
+    
+    return render(request, 'login.html')
+    
+
+def forgot_password_view(request):
+    if request.method == 'POST':
+        phone = request.POST.get('phone')
+        new_pass = request.POST.get('new_pass')
+
+        get_user = UserModel.objects.filter(phone=phone).first()
+
+        if get_user:
+            get_user.password = new_pass
+            get_user.save()
+            return redirect('login')
+        
+        return render(request, 'forgot_password.html', {'error': 'No account found with this phone'})
+
+    return render(request, 'forgot_password.html')
+
+
+def change_password_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        new_password = request.POST.get('new_password')
+
+        get_user = UserModel.objects.filter(
+            username=username,
+            password=password).first()
+        
+        if get_user:
+            get_user.password = new_password
+            get_user.save()
+            return redirect('home')
+        
+    return render(request, 'change_password.html')
+
+
+def logout_view(request):
+    request.session.flush()
+    return redirect('login')
+
+
+def home_view(request):
+    get_user = request.session.get('user_id')
+    
+    if not get_user:
+        return redirect('login')
+    data = {'data': get_object_or_404(UserModel, id=get_user)}
+    return render(request, 'home.html', data)
+
+

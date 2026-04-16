@@ -15,7 +15,7 @@
     </div>
 
     <form method="get" class="search-form">
-        <input type="text" name="search" placeholder="Search by name or address..." value="{{ request.GET.search }}">
+        <input type="text" name="search" placeholder="Search by name or address..." value="{{ search }}">
         <button type="submit" class="btn btn-primary">Search</button>
         <a href="{% url 'publisher_list' %}" class="btn btn-secondary">Reset</a>
     </form>
@@ -27,7 +27,7 @@
                 {% if publisher.logo %}
                     <img src="{{ publisher.logo.url }}" alt="{{ publisher.name }}">
                 {% else %}
-                    <div class="no-img">🏢 No logo</div>
+                    <div class="no-img">No logo!</div>
                 {% endif %}
             </div>
             <div class="card-content">
@@ -40,7 +40,7 @@
             </div>
         </div>
         {% empty %}
-        <div class="empty-state">No publishers found 😢</div>
+        <div class="empty-state">No publishers found!</div>
         {% endfor %}
     </div>
 </div>
